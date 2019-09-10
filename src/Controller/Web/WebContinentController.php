@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Web;
 
 use App\Entity\Continent;
 use App\Form\ContinentType;
@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/continent")
  */
-class ContinentController extends AbstractController
+class WebContinentController extends AbstractController
 {
     /**
      * @Route("/", name="continent_index", methods={"GET"})
