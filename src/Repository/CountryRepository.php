@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Contry;
+use App\Entity\Country;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @method Contry|null find($id, $lockMode = null, $lockVersion = null)
- * @method Contry|null findOneBy(array $criteria, array $orderBy = null)
- * @method Contry[]    findAll()
- * @method Contry[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Country|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Country|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Country[]    findAll()
+ * @method Country[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ContryRepository extends ServiceEntityRepository
+class CountryRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Contry::class);
+        parent::__construct($registry, Country::class);
     }
 
     // /**
-    //  * @return Contry[] Returns an array of Contry objects
+    //  * @return Country[] Returns an array of Country objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class ContryRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Contry
+    public function findOneBySomeField($value): ?Country
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.exampleField = :val')
