@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Assets\AppEncoder;
 
 /**
  * @Route("/hosting")
@@ -17,69 +18,77 @@ class HostingController extends AbstractController
 {
     /**
      * @Route("/", name="hosting_index", methods={"GET"})
+     * @param HostingRepository $hostingRepository
+     * @param AppEncoder $encoder
+     * @return Response
      */
-    public function index(HostingRepository $hostingRepository): Response
+    public function index(HostingRepository $hostingRepository, AppEncoder $encoder): Response
     {
-        return $this->render('hosting/index.html.twig', [
-            'hostings' => $hostingRepository->findAll(),
-        ]);
+        $response = $hostingRepository->findAll();
+        $jsonContent = $encoder->encoder($response);
+
+        return new Response($jsonContent, 200, ["Content-Type" => "application/json"]);
     }
 
     /**
      * @Route("/new", name="hosting_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param AppEncoder $encoder
+     * @return Response
      */
-    public function new(Request $request): Response
+    public function new(Request $request, AppEncoder $encoder): Response
     {
-        $hosting = new Hosting();
-        $form = $this->createForm(HostingType::class, $hosting);
-        $form->handleRequest($request);
+        $params = $request->request->all();
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $hosting = new Hosting($params["city_id"], $params["name"], $params["address"], $params["price_per_night"], $params["type"]);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($hosting);
             $entityManager->flush();
+            $response = $encoder->encoder($hosting);
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
 
-            return $this->redirectToRoute('hosting_index');
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
+    }
+
+    /**
+     * @Route("/view/{id}", name="hosting_show", methods={"GET"})
+     */
+    public function show(Hosting $hosting, AppEncoder $encoder): Response
+    {
+        $response = $encoder->encoder($hosting);
+        return new Response($response, 200, ["Content-Type" => "application/json"]);
+    }
+
+    /**
+     * @Route("/edit/{id}", name="hosting_edit", methods={"GET","POST"})
+     */
+    public function edit($id, Request $request, Hosting $hosting, AppEncoder $encoder): Response
+    {
+        $params = $request->request->all();
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $hosting = $entityManager->getRepository(Hosting::class)->find($id);
+
+        if (!$hosting) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$id
+            );
         }
 
-        return $this->render('hosting/new.html.twig', [
-            'hosting' => $hosting,
-            'form' => $form->createView(),
-        ]);
+        $hosting->setName($params["city_id"]);
+        $hosting->setName($params["name"]);
+        $hosting->setName($params["address"]);
+        $hosting->setName($params["price_per_night"]);
+        $hosting->setName($params["type"]);
+        $entityManager->flush();
+
+        $response = $encoder->encoder($hosting);
+        return new Response($response, 200, ["Content-Type" => "application/json"]);
     }
 
     /**
-     * @Route("/{id}", name="hosting_show", methods={"GET"})
-     */
-    public function show(Hosting $hosting): Response
-    {
-        return $this->render('hosting/show.html.twig', [
-            'hosting' => $hosting,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="hosting_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Hosting $hosting): Response
-    {
-        $form = $this->createForm(HostingType::class, $hosting);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('hosting_index');
-        }
-
-        return $this->render('hosting/edit.html.twig', [
-            'hosting' => $hosting,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="hosting_delete", methods={"DELETE"})
+     * @Route("/delete/{id}", name="hosting_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Hosting $hosting): Response
     {
