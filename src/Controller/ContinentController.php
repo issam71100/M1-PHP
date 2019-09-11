@@ -42,62 +42,82 @@ class ContinentController extends AbstractController
     {
         $params = $request->request->all();
 
+        if (!isset($params["name"]) || !isset($params["image"])) {
+            return new Response(null, 400, ["Content-Type" => "application/json"]);
+        }
+
         $continent = new Continent($params["name"], $params["image"]);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($continent);
         $entityManager->flush();
+
         $response = $encoder->encoder($continent);
+
         return new Response($response, 200, ["Content-Type" => "application/json"]);
+    }
+
+    /**
+     * @Route("/view/{id}", name="continent_show", methods={"GET"})
+     * @param Continent $continent
+     * @param AppEncoder $encoder
+     * @return Response
+     */
+    public function show(Continent $continent, AppEncoder $encoder): Response
+    {
+        if($continent!=null){
+            $response = $encoder->encoder($continent);
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
+        }
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
+    }
+
+    /**
+     * @Route("/edit/{id}", name="continent_edit", methods={"GET","POST"})
+     * @param $id
+     * @param Request $request
+     * @param Continent $continent
+     * @param AppEncoder $encoder
+     * @return Response
+     */
+    public function edit(Request $request, Continent $continent, AppEncoder $encoder): Response
+    {
+        if ($continent!=null){
+            $params = $request->request->all();
+
+            if (!isset($params["name"]) || !isset($params["image"])) {
+                return new Response(null, 400, ["Content-Type" => "application/json"]);
+            }
+
+            $continent->setName($params["name"]);
+            $continent->setImage($params["image"]);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+
+            $response = $encoder->encoder($continent);
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
+        }
 
         return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
     /**
-     * @Route("/view/{id}", name="continent_show", methods={"GET"})
-     */
-    public function show(Continent $continent, AppEncoder $encoder): Response
-    {
-        $response = $encoder->encoder($continent);
-        return new Response($response, 200, ["Content-Type" => "application/json"]);
-    }
-    // todo continent non trouver
-
-    /**
-     * @Route("/edit/{id}", name="continent_edit", methods={"GET","POST"})
-     */
-    public function edit($id, Request $request, Continent $continent, AppEncoder $encoder): Response
-    {
-
-        $params = $request->request->all();
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $continent = $entityManager->getRepository(Continent::class)->find($id);
-
-        if (!$continent) {
-            throw $this->createNotFoundException(
-                'No product found for id ' . $id
-            );
-        }
-
-        $continent->setName($params["name"]);
-        $continent->setImage($params["image"]);
-        $entityManager->flush();
-
-        $response = $encoder->encoder($continent);
-        return new Response($response, 200, ["Content-Type" => "application/json"]);
-
-    }
-
-    /**
      * @Route("/delete/{id}", name="continent_delete", methods={"DELETE"})
+     * @param AppEncoder $encoder
+     * @param Continent $continent
+     * @return Response
      */
-    public function delete(Request $request, Continent $continent): Response
+    public function delete(AppEncoder $encoder, Continent $continent): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($continent);
-        $entityManager->flush();
+        if ($continent != null) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($continent);
+            $entityManager->flush();
 
-        return $this->redirectToRoute('continent_index');
+            $response = $encoder->encoder($continent);
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
+        }
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 }
