@@ -17,6 +17,9 @@ class CityController extends AbstractController
 {
     /**
      * @Route("/", name="city_index", methods="GET")
+     * @param CityRepository $cityRepository
+     * @param AppEncoder $encoder
+     * @return Response
      */
     public function index(CityRepository $cityRepository, AppEncoder $encoder)
     {
@@ -29,6 +32,9 @@ class CityController extends AbstractController
 
     /**
      * @Route("/view/{id}", name="city_show", methods={"GET"})
+     * @param City $city
+     * @param AppEncoder $encoder
+     * @return Response
      */
     public function show(City $city, AppEncoder $encoder): Response
     {
@@ -47,6 +53,9 @@ class CityController extends AbstractController
 
     /**
      * @Route("/{id}", name="city_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param City $city
+     * @return Response
      */
     public function delete(Request $request, City $city): Response
     {

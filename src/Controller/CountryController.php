@@ -42,7 +42,7 @@ class CountryController extends AbstractController
     {
         $params = $request->request->all();
 
-        if (!isset($params["name"]) || !isset($params["image"]) || !isset($params["continent"])){
+        if (!isset($params["name"]) || !isset($params["image"]) || !isset($params["continent"])) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
@@ -63,33 +63,45 @@ class CountryController extends AbstractController
     }
 
     /**
-     * @Route("/view/{id}", name="country_show", methods={"GET"})
+     * @Route("view/{id}", name="country_show", methods={"GET"})
+     * @param Country $country
+     * @param AppEncoder $encoder
+     * @return Response
      */
-    public function show(Country $country): Response
+    public function show(Country $country, AppEncoder $encoder): Response
     {
-        return $this->render('country/show.html.twig', [
-            'country' => $country,
-        ]);
+        if ($country != null) {
+            $response = $encoder->encoder($country);
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
+        }
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
     /**
      * @Route("/{id}/edit", name="country_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Country $country
+     * @param AppEncoder $encoder
+     * @param ContinentRepository $continentRepository
+     * @return Response
      */
-    public function edit(Request $request, Country $country): Response
+    public function edit(Request $request, Country $country, AppEncoder $encoder, ContinentRepository $continentRepository): Response
     {
-        $form = $this->createForm(CountryType::class, $country);
-        $form->handleRequest($request);
+        if ($country != null){
+            $params = $request->request->all();
+            $entityManager = $this->getDoctrine()->getManager();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $continent = $continentRepository->findOneByName($params["continent"]);
 
-            return $this->redirectToRoute('country_index');
+            $country->setName($params["name"]);
+            $country->setImage($params["image"]);
+            $country->setContinent($continent);
+            $entityManager->flush();
+
+            $response = $encoder->encoder($country);
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
         }
-
-        return $this->render('country/edit.html.twig', [
-            'country' => $country,
-            'form' => $form->createView(),
-        ]);
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
     /**
@@ -97,7 +109,7 @@ class CountryController extends AbstractController
      */
     public function delete(Request $request, Country $country): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$country->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $country->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($country);
             $entityManager->flush();
