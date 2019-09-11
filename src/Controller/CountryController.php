@@ -63,7 +63,7 @@ class CountryController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="country_show", methods={"GET"})
+     * @Route("/view/{id}", name="country_show", methods={"GET"})
      */
     public function show(Country $country): Response
     {
@@ -93,7 +93,7 @@ class CountryController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="country_delete", methods={"DELETE"})
+     * @Route("delete/{id}", name="country_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Country $country): Response
     {
