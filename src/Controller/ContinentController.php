@@ -61,33 +61,39 @@ class ContinentController extends AbstractController
     /**
      * @Route("/edit/{id}", name="continent_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Continent $continent): Response
+    public function edit($id,   Request $request, Continent $continent, AppEncoder $encoder): Response
     {
-        $form = $this->createForm(ContinentType::class, $continent);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+        $params = $request->request->all();
 
-            return $this->redirectToRoute('continent_index');
-        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $continent = $entityManager->getRepository(Continent::class)->find($id);
 
-        $response = json_encode(array(
-            "status" => "error"
-        ));
-        return new Response(null, 400, ["Content-Type" => "application/json"]);
+    if (!$continent) {
+        throw $this->createNotFoundException(
+            'No product found for id '.$id
+        );
+    }
+
+    $continent->setName($params["name"]);
+    $continent->setImage($params["image"]);
+    $entityManager->flush();
+
+    $response = $encoder->encoder($continent);
+    return new Response($response, 200, ["Content-Type" => "application/json"]);
+
     }
 
     /**
-     * @Route("/{id}", name="continent_delete", methods={"DELETE"})
+     * @Route("/delete/{id}", name="continent_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Continent $continent): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$continent->getId(), $request->request->get('_token'))) {
+        //if ($this->isCsrfTokenValid('delete'.$continent->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($continent);
             $entityManager->flush();
-        }
+        //}
 
         return $this->redirectToRoute('continent_index');
     }
