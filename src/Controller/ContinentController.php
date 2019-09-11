@@ -44,7 +44,7 @@ class ContinentController extends AbstractController
             $entityManager->flush();
             $response = $encoder->encoder($continent);
             return new Response($response, 200, ["Content-Type" => "application/json"]);
-        
+
         return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
