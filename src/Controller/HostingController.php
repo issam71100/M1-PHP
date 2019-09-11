@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Hosting;
 use App\Form\HostingType;
 use App\Repository\HostingRepository;
+use App\Repository\CityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,21 +35,35 @@ class HostingController extends AbstractController
      * @Route("/new", name="hosting_new", methods={"GET","POST"})
      * @param Request $request
      * @param AppEncoder $encoder
+     * @param CityRepository $cityRepository
      * @return Response
      */
-    public function new(Request $request, AppEncoder $encoder): Response
+    public function new(Request $request, AppEncoder $encoder, CityRepository $cityRepository): Response
     {
         $params = $request->request->all();
 
-        $hosting = new Hosting($params["city_id"], $params["name"], $params["address"], $params["price_per_night"], $params["type"]);
+        if (!isset($params["name"]) || !isset($params["address"]) || !isset($params["price_per_night"]) 
+        || !isset($params["type"]) || !isset($params["city_id"])) {
+            return new Response(null, 400, ["Content-Type" => "application/json"]);
+        }
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($hosting);
-            $entityManager->flush();
-            $response = $encoder->encoder($hosting);
-            return new Response($response, 200, ["Content-Type" => "application/json"]);
+        $city = $cityRepository->findOneByName($params["city_id"]);
 
-        return new Response(null, 400, ["Content-Type" => "application/json"]);
+        $hosting = new Hosting();
+
+        $hosting->setName($params["name"]);
+        $hosting->setAddress($params["address"]);
+        $hosting->setPricePerNight($params["price_per_night"]);
+        $hosting->setType($params["type"]);
+        $hosting->setCity($params["city_id"]);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($hosting);
+        $entityManager->flush();
+
+        $response = $encoder->encoder($hosting);
+
+        return new Response($response, 200, ["Content-Type" => "application/json"]);
     }
 
     /**
@@ -56,8 +71,12 @@ class HostingController extends AbstractController
      */
     public function show(Hosting $hosting, AppEncoder $encoder): Response
     {
-        $response = $encoder->encoder($hosting);
-        return new Response($response, 200, ["Content-Type" => "application/json"]);
+        if ($hosting != null) {
+            $response = $encoder->encoder($hosting);
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
+        }
+
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
     /**
@@ -65,34 +84,32 @@ class HostingController extends AbstractController
      */
     public function edit($id, Request $request, Hosting $hosting, AppEncoder $encoder): Response
     {
-        $params = $request->request->all();
+        if ($hosting != null) {
+            $params = $request->request->all();
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $hosting = $entityManager->getRepository(Hosting::class)->find($id);
-
-        if (!$hosting) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
+            $entityManager = $this->getDoctrine()->getManager();
+            $hosting = $entityManager->getRepository(Hosting::class)->find($id);
+    
+            $hosting->setCity($params["city_id"]);
+            $hosting->setName($params["name"]);
+            $hosting->setAddress($params["address"]);
+            $hosting->setPricePerNight($params["price_per_night"]);
+            $hosting->setType($params["type"]);
+            $entityManager->flush();
+    
+            $response = $encoder->encoder($hosting);
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
         }
-
-        $hosting->setName($params["city_id"]);
-        $hosting->setName($params["name"]);
-        $hosting->setName($params["address"]);
-        $hosting->setName($params["price_per_night"]);
-        $hosting->setName($params["type"]);
-        $entityManager->flush();
-
-        $response = $encoder->encoder($hosting);
-        return new Response($response, 200, ["Content-Type" => "application/json"]);
+        
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
     /**
      * @Route("/delete/{id}", name="hosting_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, Hosting $hosting): Response
+    public function delete(Hosting $hosting): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$hosting->getId(), $request->request->get('_token'))) {
+        if ($hosting != null) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($hosting);
             $entityManager->flush();

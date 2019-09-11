@@ -90,14 +90,13 @@ class CountryController extends AbstractController
         if ($country != null) {
             $params = $request->request->all();
 
-
-            $entityManager = $this->getDoctrine()->getManager();
-
             $continent = $continentRepository->findOneByName($params["continent"]);
 
             $country->setName($params["name"]);
             $country->setImage($params["image"]);
             $country->setContinent($continent);
+
+            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
             $response = $encoder->encoder($country);
@@ -147,14 +146,19 @@ class CountryController extends AbstractController
     /**
      * @Route("delete/{id}", name="country_delete", methods={"DELETE"})
      * @param Country $country
+     * @param AppEncoder $encoder
      * @return Response
      */
-    public function delete(Country $country): Response
+    public function delete(Country $country, AppEncoder $encoder): Response
     {
         if ($country != null){
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($country);
             $entityManager->flush();
+
+            $response = $encoder->encoder($country);
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
+
         }
 
         return $this->redirectToRoute('country_index');
