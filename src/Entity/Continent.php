@@ -11,6 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Continent
 {
+    public function __construct(string $name, string $image) {
+        $this->contries = new ArrayCollection();
+        
+        $this->setName($name);
+        $this->setImage($image);
+    }
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -32,12 +38,6 @@ class Continent
      * @ORM\OneToMany(targetEntity="Country", mappedBy="continent")
      */
     private $contries;
-
-
-    public function __construct()
-    {
-        $this->contries = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
