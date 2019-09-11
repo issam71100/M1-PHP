@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Continent;
+use App\Entity\Country;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\NonUniqueResultException;
 
 /**
- * @method Continent|null find($id, $lockMode = null, $lockVersion = null)
- * @method Continent|null findOneBy(array $criteria, array $orderBy = null)
- * @method Continent[]    findAll()
- * @method Continent[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Country|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Country|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Country[]    findAll()
+ * @method Country[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ContinentRepository extends ServiceEntityRepository
+class CountryRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Continent::class);
+        parent::__construct($registry, Country::class);
     }
 
     // /**
-    //  * @return Continent[] Returns an array of Continent objects
+    //  * @return Country[] Returns an array of Country objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,18 @@ class ContinentRepository extends ServiceEntityRepository
     }
     */
 
-    public function findOneByName($name): ?Continent
+    /*
+    public function findOneBySomeField($value): ?Country
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    */
+    public function findOneByName($name): ?Country
     {
         try {
             return $this->createQueryBuilder('c')

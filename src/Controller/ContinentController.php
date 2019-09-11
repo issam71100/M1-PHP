@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Assets\AppEncoder;
+
 
 /**
  * @Route("/continent")
@@ -16,78 +18,85 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContinentController extends AbstractController
 {
     /**
-     * @Route("/", name="continent_index", methods={"GET"})
+     * @Route("/", name="continent_index", methods="GET")
+     * @param ContinentRepository $continentRepository
+     * @param AppEncoder $encoder
+     * @return Response
      */
-    public function index(ContinentRepository $continentRepository): Response
+    public function index(ContinentRepository $continentRepository, AppEncoder $encoder)
     {
-        return $this->render('continent/index.html.twig', [
-            'continents' => $continentRepository->findAll(),
-        ]);
+        $response = $continentRepository->findAll();
+        $jsonContent = $encoder->encoder($response);
+
+        return new Response($jsonContent, 200, ["Content-Type" => "application/json"]);
     }
+
 
     /**
      * @Route("/new", name="continent_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param AppEncoder $encoder
+     * @return Response
      */
-    public function new(Request $request): Response
+    public function new(Request $request, AppEncoder $encoder): Response
     {
-        $continent = new Continent();
-        $form = $this->createForm(ContinentType::class, $continent);
-        $form->handleRequest($request);
+        $params = $request->request->all();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($continent);
-            $entityManager->flush();
+        $continent = new Continent($params["name"], $params["image"]);
 
-            return $this->redirectToRoute('continent_index');
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($continent);
+        $entityManager->flush();
+        $response = $encoder->encoder($continent);
+        return new Response($response, 200, ["Content-Type" => "application/json"]);
+
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
+    }
+
+    /**
+     * @Route("/view/{id}", name="continent_show", methods={"GET"})
+     */
+    public function show(Continent $continent, AppEncoder $encoder): Response
+    {
+        $response = $encoder->encoder($continent);
+        return new Response($response, 200, ["Content-Type" => "application/json"]);
+    }
+    // todo continent non trouver
+
+    /**
+     * @Route("/edit/{id}", name="continent_edit", methods={"GET","POST"})
+     */
+    public function edit($id, Request $request, Continent $continent, AppEncoder $encoder): Response
+    {
+
+        $params = $request->request->all();
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $continent = $entityManager->getRepository(Continent::class)->find($id);
+
+        if (!$continent) {
+            throw $this->createNotFoundException(
+                'No product found for id ' . $id
+            );
         }
 
-        return $this->render('continent/new.html.twig', [
-            'continent' => $continent,
-            'form' => $form->createView(),
-        ]);
+        $continent->setName($params["name"]);
+        $continent->setImage($params["image"]);
+        $entityManager->flush();
+
+        $response = $encoder->encoder($continent);
+        return new Response($response, 200, ["Content-Type" => "application/json"]);
+
     }
 
     /**
-     * @Route("/{id}", name="continent_show", methods={"GET"})
-     */
-    public function show(Continent $continent): Response
-    {
-        return $this->render('continent/show.html.twig', [
-            'continent' => $continent,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="continent_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Continent $continent): Response
-    {
-        $form = $this->createForm(ContinentType::class, $continent);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('continent_index');
-        }
-
-        return $this->render('continent/edit.html.twig', [
-            'continent' => $continent,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="continent_delete", methods={"DELETE"})
+     * @Route("/delete/{id}", name="continent_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Continent $continent): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$continent->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($continent);
-            $entityManager->flush();
-        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($continent);
+        $entityManager->flush();
 
         return $this->redirectToRoute('continent_index');
     }

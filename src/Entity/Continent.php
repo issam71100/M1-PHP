@@ -11,6 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Continent
 {
+    public function __construct(string $name, string $image) {
+        $this->contries = new ArrayCollection();
+        
+        $this->setName($name);
+        $this->setImage($image);
+    }
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -29,15 +35,9 @@ class Continent
     private $image;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Contry", mappedBy="continent")
+     * @ORM\OneToMany(targetEntity="Country", mappedBy="continent")
      */
     private $contries;
-
-
-    public function __construct()
-    {
-        $this->contries = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -69,14 +69,14 @@ class Continent
     }
 
     /**
-     * @return Collection|Contry[]
+     * @return Collection|Country[]
      */
     public function getContries(): Collection
     {
         return $this->contries;
     }
 
-    public function addContry(Contry $contry): self
+    public function addContry(Country $contry): self
     {
         if (!$this->contries->contains($contry)) {
             $this->contries[] = $contry;
@@ -86,7 +86,7 @@ class Continent
         return $this;
     }
 
-    public function removeContry(Contry $contry): self
+    public function removeContry(Country $contry): self
     {
         if ($this->contries->contains($contry)) {
             $this->contries->removeElement($contry);

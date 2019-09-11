@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hosting index{% endblock %}
+
+{% block body %}
+    <h1>Hosting index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Price_per_night</th>
+                <th>Type</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for hosting in hostings %}
+            <tr>
+                <td>{{ hosting.id }}</td>
+                <td>{{ hosting.name }}</td>
+                <td>{{ hosting.address }}</td>
+                <td>{{ hosting.pricePerNight }}</td>
+                <td>{{ hosting.type }}</td>
+                <td>
+                    <a href="{{ path('hosting_show', {'id': hosting.id}) }}">show</a>
+                    <a href="{{ path('hosting_edit', {'id': hosting.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('hosting_new') }}">Create new</a>
+{% endblock %}

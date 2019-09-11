@@ -13,12 +13,15 @@
         "symfony/framework-bundle": "4.3.*",
         "symfony/orm-pack": "^1.0",
         "symfony/security-csrf": "4.3.*",
+        "symfony/serializer": "4.3.*",
         "symfony/twig-bundle": "4.3.*",
         "symfony/validator": "4.3.*",
-        "symfony/yaml": "4.3.*"
+        "symfony/yaml": "4.3.*",
+      "ext-json": "*"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.13",
+        "symfony/var-dumper": "4.3.*",
         "symfony/web-server-bundle": "^4.3"
     },
     "config": {
