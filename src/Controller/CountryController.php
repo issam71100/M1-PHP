@@ -46,9 +46,12 @@ class CountryController extends AbstractController
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
+        $continent = $continentRepository->findOneByName($params["continent"]);
+
         $country = new Country();
         $country->setName($params["name"]);
         $country->setImage($params["image"]);
+        $country->setContinent($continent);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($country);
