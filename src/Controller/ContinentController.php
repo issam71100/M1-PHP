@@ -33,19 +33,16 @@ class ContinentController extends AbstractController
     /**
      * @Route("/new", name="continent_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, AppEncoder $encoder): Response
     {
         $params = $request->request->all();
-        $continent = new Continent();
         
-        $continent = new Continent();
-        $continent->setName($params["name"]);
-        $continent->setImage($params["image"]);
+        $continent = new Continent($params["name"], $params["image"]);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($continent);
             $entityManager->flush();
-            $response = AppEncoder->encoder($continent);
+            $response = $encoder->encoder($continent);
             return new Response($response, 200, ["Content-Type" => "application/json"]);
         
         return new Response(null, 400, ["Content-Type" => "application/json"]);
