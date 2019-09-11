@@ -62,7 +62,7 @@ class CountryController extends AbstractController
     }
 
     /**
-     * @Route("view/{id}", name="country_show", methods={"GET"})
+     * @Route("/view/{id}", name="country_show", methods={"GET"})
      * @param Country $country
      * @param AppEncoder $encoder
      * @return Response
