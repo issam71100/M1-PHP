@@ -35,20 +35,19 @@ class ContinentController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $params = $request->request->all();
         $continent = new Continent();
-        $form = $this->createForm(ContinentType::class, $continent);
-        $form->handleRequest($request);
+        
+        $continent = new Continent();
+        $continent->setName($params["name"]);
+        $continent->setImage($params["image"]);
 
-        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($continent);
             $entityManager->flush();
-
-            return $this->redirectToRoute('continent_index');
-        }
-        $response = json_encode(array(
-            "status" => "error"
-        ));
+            $response = AppEncoder->encoder($continent);
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
+        
         return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
