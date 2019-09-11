@@ -53,7 +53,7 @@ class ContinentController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="continent_show", methods={"GET"})
+     * @Route("/view/{id}", name="continent_show", methods={"GET"})
      */
     public function show(Continent $continent, AppEncoder $encoder): Response
     {
