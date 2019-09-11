@@ -43,12 +43,13 @@ class ContinentController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($continent);
             $entityManager->flush();
+            $response = json_encode($continent);
 
-            return $this->redirectToRoute('continent_index');
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
         }
-        $response = json_encode(array(
-            "status" => "error"
-        ));
+
+        $response = json_encode(["status" => "error"]);
+
         return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
