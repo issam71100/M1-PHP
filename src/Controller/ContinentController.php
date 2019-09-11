@@ -9,10 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use App\Assets\AppEncoder;
 
 
 /**
@@ -23,15 +20,11 @@ class ContinentController extends AbstractController
     /**
      * @Route("/", name="continent_index", methods="GET")
      */
-    public function index(ContinentRepository $continentRepository)
+    public function index(ContinentRepository $continentRepository, AppEncoder $encoder)
     {
         $response = $continentRepository->findAll();
         
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-
-        $serializer = new Serializer($normalizers, $encoders);
-        $jsonContent = $serializer->serialize($response, 'json');
+        $jsonContent = $encoder->encoder($response);
         
         return new Response($jsonContent, 200, ["Content-Type" => "application/json"]);
     }
@@ -53,25 +46,24 @@ class ContinentController extends AbstractController
 
             return $this->redirectToRoute('continent_index');
         }
-
-        return $this->render('continent/new.html.twig', [
-            'continent' => $continent,
-            'form' => $form->createView(),
-        ]);
+        $response = json_encode(array(
+            "status" => "error"
+        ));
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
     /**
      * @Route("/{id}", name="continent_show", methods={"GET"})
      */
-    public function show(Continent $continent): Response
+    public function show(Continent $continent, AppEncoder $encoder): Response
     {
-        return $this->render('continent/show.html.twig', [
-            'continent' => $continent,
-        ]);
+        $response = $encoder->encoder($continent);
+        return new Response($response, 200, ["Content-Type" => "application/json"]);
     }
+    // todo continent non trouver
 
     /**
-     * @Route("/{id}/edit", name="continent_edit", methods={"GET","POST"})
+     * @Route("/edit/{id}", name="continent_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Continent $continent): Response
     {
@@ -84,10 +76,10 @@ class ContinentController extends AbstractController
             return $this->redirectToRoute('continent_index');
         }
 
-        return $this->render('continent/edit.html.twig', [
-            'continent' => $continent,
-            'form' => $form->createView(),
-        ]);
+        $response = json_encode(array(
+            "status" => "error"
+        ));
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
     /**
