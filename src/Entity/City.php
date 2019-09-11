@@ -40,7 +40,7 @@ class City
     private $hostings;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Contry", inversedBy="cities")
+     * @ORM\ManyToOne(targetEntity="Country", inversedBy="cities")
      * @ORM\JoinColumn(nullable=false)
      */
     private $contry;
@@ -142,12 +142,12 @@ class City
         return $this;
     }
 
-    public function getContry(): ?Contry
+    public function getContry(): ?Country
     {
         return $this->contry;
     }
 
-    public function setContry(?Contry $contry): self
+    public function setContry(?Country $contry): self
     {
         $this->contry = $contry;
 
