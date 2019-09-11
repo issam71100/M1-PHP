@@ -10,20 +10,32 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+
+
 /**
  * @Route("/continent")
  */
 class ContinentController extends AbstractController
 {
     /**
-     * @Route("/", name="continent_index", methods={"GET"})
+     * @Route("/", name="continent_index", methods="GET")
      */
-    public function index(ContinentRepository $continentRepository): Response
+    public function index(ContinentRepository $continentRepository)
     {
-        return $this->render('continent/index.html.twig', [
-            'continents' => $continentRepository->findAll(),
-        ]);
+        $response = $continentRepository->findAll();
+        
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+
+        $serializer = new Serializer($normalizers, $encoders);
+        $jsonContent = $serializer->serialize($response, 'json');
+        
+        return new Response($jsonContent, 200, ["Content-Type" => "application/json"]);
     }
+
 
     /**
      * @Route("/new", name="continent_new", methods={"GET","POST"})
