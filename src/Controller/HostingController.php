@@ -76,11 +76,11 @@ class HostingController extends AbstractController
             );
         }
 
-        $hosting->setName($params["city_id"]);
+        $hosting->setId($params["city_id"]);
         $hosting->setName($params["name"]);
-        $hosting->setName($params["address"]);
-        $hosting->setName($params["price_per_night"]);
-        $hosting->setName($params["type"]);
+        $hosting->setAddress($params["address"]);
+        $hosting->setPricePerNight($params["price_per_night"]);
+        $hosting->setType($params["type"]);
         $entityManager->flush();
 
         $response = $encoder->encoder($hosting);
