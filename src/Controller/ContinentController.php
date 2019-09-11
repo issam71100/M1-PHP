@@ -19,21 +19,26 @@ class ContinentController extends AbstractController
 {
     /**
      * @Route("/", name="continent_index", methods="GET")
+     * @param ContinentRepository $continentRepository
+     * @param AppEncoder $encoder
+     * @return Response
      */
     public function index(ContinentRepository $continentRepository, AppEncoder $encoder)
     {
         $response = $continentRepository->findAll();
-        
         $jsonContent = $encoder->encoder($response);
-        
+
         return new Response($jsonContent, 200, ["Content-Type" => "application/json"]);
     }
 
 
     /**
      * @Route("/new", name="continent_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param AppEncoder $encoder
+     * @return Response
      */
-    public function new(Request $request): Response
+    public function new(Request $request, AppEncoder $encoder): Response
     {
         $params = $request->request->all();
         $continent = new Continent();
@@ -45,7 +50,7 @@ class ContinentController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($continent);
             $entityManager->flush();
-            $response = AppEncoder->encoder($continent);
+            $response = $encoder->encoder($continent);
             return new Response($response, 200, ["Content-Type" => "application/json"]);
 
         return new Response(null, 400, ["Content-Type" => "application/json"]);

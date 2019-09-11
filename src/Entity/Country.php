@@ -45,6 +45,7 @@ class Country
         $this->cities = new ArrayCollection();
     }
 
+
     public function getId(): ?int
     {
         return $this->id;

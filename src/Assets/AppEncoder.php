@@ -11,6 +11,7 @@ class AppEncoder {
         $normalizers = [new ObjectNormalizer()];
 
         $serializer = new Serializer($normalizers, $encoders);
+
         $jsonContent = $serializer->serialize($data, 'json');
 
         return $jsonContent;

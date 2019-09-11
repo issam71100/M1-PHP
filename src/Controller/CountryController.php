@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Assets\AppEncoder;
 use App\Entity\Country;
 use App\Form\CountryType;
+use App\Repository\ContinentRepository;
 use App\Repository\CountryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,35 +19,44 @@ class CountryController extends AbstractController
 {
     /**
      * @Route("/", name="country_index", methods={"GET"})
+     * @param CountryRepository $countryRepository
+     * @param AppEncoder $encoder
+     * @return Response
      */
-    public function index(CountryRepository $countryRepository): Response
+    public function index(CountryRepository $countryRepository, AppEncoder $encoder): Response
     {
-        return $this->render('country/index.html.twig', [
-            'countries' => $countryRepository->findAll(),
-        ]);
+        $response = $countryRepository->findAll();
+        $jsonContent = $encoder->encoder($response);
+
+        return new Response($jsonContent, 200, ["Content-Type" => "application/json"]);
     }
 
     /**
      * @Route("/new", name="country_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param AppEncoder $encoder
+     * @param ContinentRepository $continentRepository
+     * @return Response
      */
-    public function new(Request $request): Response
+    public function new(Request $request, AppEncoder $encoder, ContinentRepository $continentRepository): Response
     {
-        $country = new Country();
-        $form = $this->createForm(CountryType::class, $country);
-        $form->handleRequest($request);
+        $params = $request->request->all();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($country);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('country_index');
+        if (!isset($params["name"]) || !isset($params["image"]) || !isset($params["continent"])){
+            return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
-        return $this->render('country/new.html.twig', [
-            'country' => $country,
-            'form' => $form->createView(),
-        ]);
+        $country = new Country();
+        $country->setName($params["name"]);
+        $country->setImage($params["image"]);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($country);
+        $entityManager->flush();
+
+        $response = $encoder->encoder($country);
+
+        return new Response($response, 200, ["Content-Type" => "application/json"]);
     }
 
     /**
