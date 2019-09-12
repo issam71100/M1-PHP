@@ -47,7 +47,7 @@ class HostingController extends AbstractController
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
-        $city = $cityRepository->findOneByName($params["city_id"]);
+        $city = $cityRepository->find($params["city_id"]);
 
         $hosting = new Hosting();
 
@@ -55,7 +55,7 @@ class HostingController extends AbstractController
         $hosting->setAddress($params["address"]);
         $hosting->setPricePerNight($params["price_per_night"]);
         $hosting->setType($params["type"]);
-        $hosting->setCity($params["city_id"]);
+        $hosting->setCity($city);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($hosting);
