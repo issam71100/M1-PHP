@@ -11,6 +11,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Activity
 {
+    public function __construct(\DateTimeInterface $duration, string $description, string $type, float $price, City $city) {
+
+        $this->months = new ArrayCollection();
+
+        $this->setDuration($duration);
+        $this->setType($type);
+        $this->setDescription($description);
+        $this->setPrice($price);
+        $this->setCity($city);
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -47,11 +58,6 @@ class Activity
      * @ORM\OneToMany(targetEntity="App\Entity\Month", mappedBy="activity")
      */
     private $months;
-
-    public function __construct()
-    {
-        $this->months = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
