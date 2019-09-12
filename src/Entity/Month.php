@@ -17,7 +17,7 @@ class Month
     private $id;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string",length=255)
      */
     private $name;
 
@@ -27,7 +27,7 @@ class Month
     private $temperature_avg;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Activity", inversedBy="months")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Activity", inversedBy="months",cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $activity;
@@ -37,12 +37,12 @@ class Month
         return $this->id;
     }
 
-    public function getName(): ?\DateTimeInterface
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(\DateTimeInterface $name): self
+    public function setName(string $name): self
     {
         $this->name = $name;
 

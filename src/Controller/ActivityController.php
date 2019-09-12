@@ -50,12 +50,12 @@ class ActivityController extends AbstractController
         }
 
         // Verify all months parameters given
-        if (!isset($params["months"]) || !isset($params["temperature"])) {
+        if (!isset($params["months"])) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
         // Verify type of parameters
-        if (!is_numeric($params["duration"]) || !is_numeric($params["price"]) || !is_numeric($params["city"]) || !is_numeric($params["temperature"])) {
+        if (!is_numeric($params["duration"]) || !is_numeric($params["price"]) || !is_numeric($params["city"])) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
@@ -63,8 +63,14 @@ class ActivityController extends AbstractController
         $months = (array)json_decode($params["months"]);
 
         //Verify months parameter is array
-        if ( !is_array($params["temperature"]) || empty($months)) {
+        if ( !is_array($months) || empty($months)) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
+        }else{
+            foreach ($months as $month){
+                if (!is_array($month) || !sizeof($month)==2){
+                    return new Response(null, 400, ["Content-Type" => "application/json"]);
+                }
+            }
         }
 
         // Convert timestamp to DateTime
@@ -78,6 +84,8 @@ class ActivityController extends AbstractController
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
+
+        // Management of Months
         $years_months= [
             1=>"janvier",
             2=>"fevrier",
@@ -96,32 +104,21 @@ class ActivityController extends AbstractController
         $activity = new Activity($date, $params["description"], $params["type"], $params["price"], $city);
 
         foreach ($months as $key=>$month){
-            if ($months<1 || $month>12){
+            if ($months[0]<1 || $month[0]>12){
                 return new Response(null, 400, ["Content-Type" => "application/json"]);
             }
 
             $m = new Month();
-            $m->setName($years_months[$month]);
-            $m->setTemperatureAvg($params["description"]);
+            $m->setName($years_months[$month[0]]);
+            $m->setTemperatureAvg($month[1]);
             $activity->addMonth($m);
-
         }
 
-        dump($activity);
-        die();
-
-        $date = DateTime::createFromFormat('j H i', '32 20 30');
-        dump($params["duration"]);
-        dump($date);
-
-        die();
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($activity);
         $entityManager->flush();
         $response = $encoder->encoder($activity);
         return new Response($response, 200, ["Content-Type" => "application/json"]);
-
-        return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
 
