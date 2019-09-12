@@ -81,6 +81,11 @@ class HostingController extends AbstractController
 
     /**
      * @Route("/edit/{id}", name="hosting_edit", methods={"GET","POST"})
+     * @param $id
+     * @param Request $request
+     * @param Hosting $hosting
+     * @param AppEncoder $encoder
+     * @return Response
      */
     public function edit($id, Request $request, Hosting $hosting, AppEncoder $encoder): Response
     {
@@ -106,6 +111,8 @@ class HostingController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="hosting_delete", methods={"DELETE"})
+     * @param Hosting $hosting
+     * @return Response
      */
     public function delete(Hosting $hosting): Response
     {
