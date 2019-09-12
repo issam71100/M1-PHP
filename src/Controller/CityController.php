@@ -28,7 +28,7 @@ class CityController extends AbstractController
 
         $jsonContent = $encoder->encoder($response);
 
-        return new Response($jsonContent, 200, ["ContentType" => "application/json"]);
+        return new Response($jsonContent, 200, ["Content-Type" => "application/json"]);
     }
 
     /**
