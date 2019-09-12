@@ -48,11 +48,7 @@ class CityController extends AbstractController
 
         $country = $countryRepository->findOneByName($params["country"]);
 
-        $city = new City();
-        $city->setName($params["name"]);
-        $city->setImage($params["image"]);
-        $city->setContry($country);
-
+        $city = new City($params["name"],$params["image"], $country);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($city);
         $entityManager->flush();
