@@ -28,7 +28,13 @@ class ContinentController extends AbstractController
         $response = $continentRepository->findAll();
         $jsonContent = $encoder->encoder($response);
 
-        return new Response($jsonContent, 200, ["Content-Type" => "application/json"]);
+        $response = new Response();
+        $response->headers->set("Content-Type","application/json");
+        $response->headers->set("Access-Control-Allow-Origin","*");
+        $response->setStatusCode(Response::HTTP_OK);
+        $response->setContent($jsonContent);
+
+        return $response;
     }
 
 
@@ -54,7 +60,8 @@ class ContinentController extends AbstractController
 
         $response = $encoder->encoder($continent);
 
-        return new Response($response, 200, ["Content-Type" => "application/json"]);
+
+        return new Response($response, 200, ["Content-Type" => "application/json","Access-Control-Allow-Origin","*"]);
     }
 
     /**
