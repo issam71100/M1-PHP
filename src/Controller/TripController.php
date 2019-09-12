@@ -14,16 +14,14 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/trip")
  */
-class TripController extends AbstractController
-{
+class TripController extends AbstractController {
     /**
      * @Route("/", name="trip_index", methods={"GET"})
      * @param TripRepository $tripRepository
      * @param AppEncoder $encoder
      * @return Response
      */
-    public function index(TripRepository $tripRepository, AppEncoder $encoder): Response
-    {
+    public function index (TripRepository $tripRepository, AppEncoder $encoder): Response {
         $response = $tripRepository->findAll();
         $jsonContent = $encoder->encoder($response);
 
@@ -34,29 +32,22 @@ class TripController extends AbstractController
      * @Route("/new", name="trip_new", methods={"GET","POST"})
      * @param Request $request
      * @param AppEncoder $encoder
-     * @param ContinentRepository $continentRepository
+     * @param TripRepository $tripRepository
+     * @param CityRepository $cityRepository
      * @return Response
      */
-    public function new(Request $request, AppEncoder $encoder, TripRepository $tripRepository, CityRepository $cityRepository): Response
-    {
+    public function new (Request $request, AppEncoder $encoder, CityRepository $cityRepository): Response {
         $params = $request->request->all();
 
         $entityManager = $this->getDoctrine()->getManager();
 
         $depart = $cityRepository->findOneByName("Paris");
 
-        if($depart->getId() == null){
+        if ($depart->getId() == null) {
             return new Response(null, 400, ["Content-type" => "application/json"]);
         }
 
-        if (
-            $depart->getId() !== null || 
-            !isset($params["city_arrival"]) || 
-            !isset($params["date_departure"]) || 
-            !isset($params["date_arrival"]) || 
-            !isset($params["duration"]) || 
-            !isset($params["price"]) || 
-            !isset($params["transport"])) {
+        if ($depart->getId() !== null || !isset($params["city_arrival"]) || !isset($params["date_departure"]) || !isset($params["date_arrival"]) || !isset($params["duration"]) || !isset($params["price"]) || !isset($params["transport"])) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
@@ -77,8 +68,7 @@ class TripController extends AbstractController
      * @param AppEncoder $encoder
      * @return Response
      */
-    public function show(Trip $trip, AppEncoder $encoder): Response
-    {
+    public function show (Trip $trip, AppEncoder $encoder): Response {
         if ($trip != null) {
             $response = $encoder->encoder($trip);
             return new Response($response, 200, ["Content-Type" => "application/json"]);
@@ -88,68 +78,32 @@ class TripController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="trip_edit", methods={"GET","POST"})
+     * @Route("/edit/{id}", name="trip_edit", methods={"GET","POST"})
      * @param Request $request
      * @param Trip $trip
      * @param AppEncoder $encoder
-     * @param ContinentRepository $continentRepository
+     * @param CityRepository $cityRepository
      * @return Response
      */
-     public function edit(Request $request, Trip $trip, AppEncoder $encoder, ContinentRepository $continentRepository): Response
-    {
+    public function edit (Request $request, Trip $trip, AppEncoder $encoder, CityRepository $cityRepository): Response {
         if ($trip != null) {
             $params = $request->request->all();
 
+            $depart = $cityRepository->findOneByName("Paris");
 
             $entityManager = $this->getDoctrine()->getManager();
+            if ($depart->getId() !== null || !isset($params["city_arrival"]) || !isset($params["date_departure"]) || !isset($params["date_arrival"]) || !isset($params["duration"]) || !isset($params["price"]) || !isset($params["transport"])) {
+                $trip->setCityDeparture($depart);
+                $trip->setCityArrival($params["city_arrival"]);
+                $trip->setDuration($params["duration"]);
+                $trip->setPrice($params["price"]);
+                $trip->setTransport($params["transport"]);
+                $entityManager->flush();
 
-            $continent = $continentRepository->findOneByName($params["continent"]);
+                $response = $encoder->encoder($trip);
+                return new Response($response, 200, ["Content-Type" => "application/json"]);
 
-            $trip->setName($params["name"]);
-            $trip->setImage($params["image"]);
-            $trip->setContinent($continent);
-            $entityManager->flush();
-
-            $response = $encoder->encoder($trip);
-            return new Response($response, 200, ["Content-Type" => "application/json"]);
-        }
-
-        return new Response(null, 400, ["Content-Type" => "application/json"]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="trip_edit_name", methods={"GET","POST"})
-     * @param Request $request
-     * @param TripRepository $tripRepository
-     * @param AppEncoder $encoder
-     * @param ContinentRepository $continentRepository
-     * @return Response
-     */
-    
-    public function editByName(Request $request, TripRepository $tripRepository, AppEncoder $encoder, ContinentRepository $continentRepository): Response
-    {
-        $params = $request->request->all();
-
-        if (!isset($params["name"])) {
-            return new Response(null, 400, ["Content-Type" => "application/json"]);
-        }
-
-        $trip = $tripRepository->findOneByName($params["name"]);
-
-        if ($trip != null) {
-            $params = $request->request->all();
-
-            $entityManager = $this->getDoctrine()->getManager();
-
-            $continent = $continentRepository->findOneByName($params["continent"]);
-
-            $trip->setName($params["name"]);
-            $trip->setImage($params["image"]);
-            $trip->setContinent($continent);
-            $entityManager->flush();
-
-            $response = $encoder->encoder($trip);
-            return new Response($response, 200, ["Content-Type" => "application/json"]);
+            }
         }
 
         return new Response(null, 400, ["Content-Type" => "application/json"]);
@@ -160,9 +114,8 @@ class TripController extends AbstractController
      * @param Trip $trip
      * @return Response
      */
-    public function delete(Trip $trip): Response
-    {
-        if ($trip != null){
+    public function delete (Trip $trip): Response {
+        if ($trip != null) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($trip);
             $entityManager->flush();
@@ -170,33 +123,4 @@ class TripController extends AbstractController
 
         return $this->redirectToRoute('trip_index');
     }
-
-    /**
-     * @Route("delete/{name}", name="trip_delete_name", methods={"DELETE"})
-     * @param Request $request
-     * @param AppEncoder $encoder
-     * @param TripRepository $tripRepository
-     * @return Response
-     */
-    public function deleteByName(Request $request,AppEncoder $encoder, TripRepository $tripRepository): Response
-    {
-        $params = $request->request->all();
-
-        if (!isset($params["name"])) {
-            return new Response(null, 400, ["Content-Type" => "application/json"]);
-        }
-
-        $trip = $tripRepository->findOneByName($params["name"]);
-
-        if ($trip != null){
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($trip);
-            $entityManager->flush();
-            $response = $encoder->encoder($trip);
-            return new Response($response, 200, ["Content-Type" => "application/json"]);
-        }
-
-        return new Response(null, 400, ["Content-Type" => "application/json"]);
-    }
-    
 }
