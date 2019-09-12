@@ -56,7 +56,7 @@ class TripController extends AbstractController {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
-        $city_arrival = $cityRepository->find($params["city_arrival"]);
+        $city_arrival = $cityRepository->find(intval($params["city_arrival"]));
 
         // Convert timestamp to DateTime
         $s_date = date("Y-M-j h:i", $params["duration"]);
