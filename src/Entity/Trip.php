@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,9 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Trip
 {
 
-    public function __construct(string $transport, int $duration, int $price, int $city_departure, int $city_arrival) {
-        $this->trip = new ArrayCollection();
-        
+    public function __construct(string $transport, \DateTime $duration, int $price, City $city_departure, City $city_arrival) {
         $this->setCityArrival($city_arrival);
         $this->setCityDeparture($city_departure);
         $this->setDuration($duration);
