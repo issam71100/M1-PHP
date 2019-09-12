@@ -62,7 +62,9 @@ class TripController extends AbstractController {
         $s_date = date("Y-M-j h:i", $params["duration"]);
         $duration = new DateTime($s_date);
 
-        $trip = new Trip($params["transport"], $duration, $params["price"], $city_departure, $city_arrival);
+
+
+        $trip = new Trip($params["transport"], $duration, intval($params["price"]), $city_departure, $city_arrival);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($trip);
