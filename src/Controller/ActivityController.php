@@ -127,50 +127,30 @@ class ActivityController extends AbstractController
      */
     public function show(Activity $activity, AppEncoder $encoder): Response
     {
-        $response = $encoder->encoder($activity);
-        return new Response($response, 200, ["Content-Type" => "application/json"]);
-    }
-
-
-    /**
-     * @Route("/edit/{id}", name="activity_edit", methods={"GET","POST"})
-     */
-    public function edit($id, Request $request, Activity $activity, AppEncoder $encoder): Response
-    {
-
-        $params = $request->request->all();
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $activity = $entityManager->getRepository(Activity::class)->find($id);
-
-        if (!$activity) {
-            throw $this->createNotFoundException(
-                'No product found for id ' . $id
-            );
+        if (!$activity==null) {
+            $response = $encoder->encoder($activity);
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
         }
-
-        $activity->setType($params["type"]);
-        $activity->setDescription($params["description"]);
-        $activity->setDuration($params["duration"]);
-        $activity->setPrice($params["price"]);
-        $activity->setCity($params["city"]);
-        $entityManager->flush();
-
-        $response = $encoder->encoder($activity);
-        return new Response($response, 200, ["Content-Type" => "application/json"]);
-
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 
 
     /**
      * @Route("/delete/{id}", name="activity_delete", methods={"DELETE"})
+     * @param Activity $activity
+     * @param AppEncoder $encoder
+     * @return Response
      */
-    public function delete(Request $request, Activity $activity): Response
+    public function delete(Activity $activity, AppEncoder $encoder): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($activity);
-        $entityManager->flush();
+        if ($activity!= null){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($activity);
+            $entityManager->flush();
+            $response = $encoder->encoder($activity);
 
-        return $this->redirectToRoute('activity_index');
+            return new Response($response, 200, ["Content-Type" => "application/json"]);
+        }
+        return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
 }

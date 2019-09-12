@@ -42,7 +42,13 @@ class CityController extends AbstractController
     {
         $params = $request->request->all();
 
+        // Check all parameters given
         if (!isset($params["name"]) || !isset($params["image"]) || !isset($params["country"])) {
+            return new Response(null, 400, ["Content-Type" => "application/json"]);
+        }
+
+        // Verify type of parameters
+        if (!is_numeric($params["country"])) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
@@ -88,6 +94,10 @@ class CityController extends AbstractController
             $params = $request->request->all();
 
             if (!isset($params["name"]) || !isset($params["image"]) || !isset($params["country"])) {
+                return new Response(null, 400, ["Content-Type" => "application/json"]);
+            }
+
+            if (!is_numeric($params["country"])) {
                 return new Response(null, 400, ["Content-Type" => "application/json"]);
             }
 
