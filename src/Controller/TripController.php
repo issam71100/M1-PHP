@@ -44,15 +44,23 @@ class TripController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         $depart = $cityRepository->findOneByName("Paris");
-        var_dump($depart);
 
-        die();
+        if($depart->getId() == null){
+            return new Response(null, 400, ["Content-type" => "application/json"]);
+        }
 
-        if (!isset($depart->id) || !isset($params["city_arrival"]) || !isset($params["duration"]) || !isset($params["price"]) || !isset($params["transport"]) ) {
+        if (
+            $depart->getId() !== null || 
+            !isset($params["city_arrival"]) || 
+            !isset($params["date_departure"]) || 
+            !isset($params["date_arrival"]) || 
+            !isset($params["duration"]) || 
+            !isset($params["price"]) || 
+            !isset($params["transport"])) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
-        $trip = new Trip($params["transport"], $params["duration"], $params["price"], $params["city_departure"], $params["city_arrival"]);
+        $trip = new Trip($params["transport"], $params["duration"], $params["price"], $depart->getId(), $params["city_arrival"]);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($trip);
@@ -87,7 +95,7 @@ class TripController extends AbstractController
      * @param ContinentRepository $continentRepository
      * @return Response
      */
-    /* public function edit(Request $request, Trip $trip, AppEncoder $encoder, ContinentRepository $continentRepository): Response
+     public function edit(Request $request, Trip $trip, AppEncoder $encoder, ContinentRepository $continentRepository): Response
     {
         if ($trip != null) {
             $params = $request->request->all();
@@ -117,7 +125,7 @@ class TripController extends AbstractController
      * @param ContinentRepository $continentRepository
      * @return Response
      */
-    /*
+    
     public function editByName(Request $request, TripRepository $tripRepository, AppEncoder $encoder, ContinentRepository $continentRepository): Response
     {
         $params = $request->request->all();
@@ -151,7 +159,7 @@ class TripController extends AbstractController
      * @Route("delete/{id}", name="trip_delete", methods={"DELETE"})
      * @param Trip $trip
      * @return Response
-     *//*
+     */
     public function delete(Trip $trip): Response
     {
         if ($trip != null){
@@ -169,7 +177,7 @@ class TripController extends AbstractController
      * @param AppEncoder $encoder
      * @param TripRepository $tripRepository
      * @return Response
-     *//*
+     */
     public function deleteByName(Request $request,AppEncoder $encoder, TripRepository $tripRepository): Response
     {
         $params = $request->request->all();
@@ -190,5 +198,5 @@ class TripController extends AbstractController
 
         return new Response(null, 400, ["Content-Type" => "application/json"]);
     }
-    */
+    
 }

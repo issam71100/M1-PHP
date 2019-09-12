@@ -48,7 +48,7 @@ class CityRepository extends ServiceEntityRepository
     }
     */
 
-    public function findOneByName($name): ?Country
+    public function findOneByName($name): ?City
     {
         try {
             return $this->createQueryBuilder('c')
