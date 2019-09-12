@@ -42,8 +42,14 @@ class HostingController extends AbstractController
     {
         $params = $request->request->all();
 
+        // Verify all Activity parameters given
         if (!isset($params["name"]) || !isset($params["address"]) || !isset($params["price_per_night"]) 
         || !isset($params["type"]) || !isset($params["city_id"])) {
+            return new Response(null, 400, ["Content-Type" => "application/json"]);
+        }
+
+        // Verify type of parameters
+        if (!is_numeric($params["price_per_night"]) || !is_numeric($params["city_id"])) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
