@@ -42,8 +42,14 @@ class HostingController extends AbstractController
     {
         $params = $request->request->all();
 
+        // Check all parameters given
         if (!isset($params["name"]) || !isset($params["address"]) || !isset($params["price_per_night"]) 
         || !isset($params["type"]) || !isset($params["city_id"])) {
+            return new Response(null, 400, ["Content-Type" => "application/json"]);
+        }
+
+        // Check type of parameters
+        if (!is_numeric($params["price_per_night"]) || !is_numeric($params["city_id"])) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
@@ -81,6 +87,11 @@ class HostingController extends AbstractController
 
     /**
      * @Route("/edit/{id}", name="hosting_edit", methods={"GET","POST"})
+     * @param $id
+     * @param Request $request
+     * @param Hosting $hosting
+     * @param AppEncoder $encoder
+     * @return Response
      */
     public function edit($id, Request $request, Hosting $hosting, AppEncoder $encoder): Response
     {
@@ -106,6 +117,8 @@ class HostingController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="hosting_delete", methods={"DELETE"})
+     * @param Hosting $hosting
+     * @return Response
      */
     public function delete(Hosting $hosting): Response
     {

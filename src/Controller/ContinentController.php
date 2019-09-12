@@ -48,6 +48,7 @@ class ContinentController extends AbstractController
     {
         $params = $request->request->all();
 
+        // Check all parameters given
         if (!isset($params["name"]) || !isset($params["image"])) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
