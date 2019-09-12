@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Activity
 {
-    public function __construct(\DateTimeInterface $duration, string $description, string $type, float $price, City $city) {
+    public function __construct(DateTime $duration, string $description, string $type, float $price, City $city) {
 
         $this->months = new ArrayCollection();
 
