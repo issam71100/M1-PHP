@@ -32,11 +32,11 @@ class ActivityController extends AbstractController
         return new Response($jsonContent, 200, ["Content-Type" => "application/json"]);
     }
 
-
     /**
      * @Route("/new", name="activity_new", methods={"GET","POST"})
      * @param Request $request
      * @param AppEncoder $encoder
+     * @param CityRepository $cityRepository
      * @return Response
      * @throws \Exception
      */

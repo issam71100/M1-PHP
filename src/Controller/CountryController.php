@@ -41,14 +41,16 @@ class CountryController extends AbstractController
     {
         $params = $request->request->all();
 
+        // Check all parameters given
         if (!isset($params["name"]) || !isset($params["image"]) || !isset($params["continent"])) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
-        // Verify type of parameters
+        // Check type of parameters
         if (!is_numeric($params["continent"])) {
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
+
 
         $continent = $continentRepository->findOneByName($params["continent"]);
 
