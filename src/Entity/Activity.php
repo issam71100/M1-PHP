@@ -56,7 +56,7 @@ class Activity
     private $city;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Month", mappedBy="activity")
+     * @ORM\OneToMany(targetEntity="App\Entity\Month", mappedBy="activity", cascade={"persist", "remove"})
      */
     private $months;
 
