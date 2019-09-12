@@ -46,13 +46,14 @@ class CityController extends AbstractController
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
+        // Verify type of parameters
+        if (!is_numeric($params["country"])) {
+            return new Response(null, 400, ["Content-Type" => "application/json"]);
+        }
+
         $country = $countryRepository->findOneByName($params["country"]);
 
-        $city = new City();
-        $city->setName($params["name"]);
-        $city->setImage($params["image"]);
-        $city->setContry($country);
-
+        $city = new City($params["name"],$params["image"], $country);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($city);
         $entityManager->flush();
@@ -92,6 +93,10 @@ class CityController extends AbstractController
             $params = $request->request->all();
 
             if (!isset($params["name"]) || !isset($params["image"]) || !isset($params["country"])) {
+                return new Response(null, 400, ["Content-Type" => "application/json"]);
+            }
+
+            if (!is_numeric($params["country"])) {
                 return new Response(null, 400, ["Content-Type" => "application/json"]);
             }
 

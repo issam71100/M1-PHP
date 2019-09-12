@@ -45,10 +45,13 @@ class City
      */
     private $contry;
 
-    public function __construct()
+    public function __construct($name = null, $image = null, $country = null)
     {
         $this->activities = new ArrayCollection();
         $this->hostings = new ArrayCollection();
+        $this->setName($name);
+        $this->setImage($image);
+        $this->setContry($country);
     }
 
     public function getId(): ?int

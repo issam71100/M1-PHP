@@ -47,4 +47,17 @@ class CityRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findOneByName($name): ?City
+    {
+        try {
+            return $this->createQueryBuilder('c')
+                ->andWhere('c.name = :name')
+                ->setParameter('name', $name)
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
+    }
 }

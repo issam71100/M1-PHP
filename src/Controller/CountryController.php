@@ -78,23 +78,24 @@ class CountryController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="country_edit", methods={"GET","POST"})
+     * @Route("/edit/{id}", name="country_edit", methods={"GET","POST"})
      * @param Request $request
      * @param Country $country
      * @param AppEncoder $encoder
      * @param ContinentRepository $continentRepository
      * @return Response
      */
-    public function edit(Request $request, Country $country, AppEncoder $encoder, ContinentRepository $continentRepository): Response
+    public function edit(Request $request, Country $country, AppEncoder $encoder): Response
     {
         if ($country != null) {
             $params = $request->request->all();
 
-            $continent = $continentRepository->findOneByName($params["continent"]);
+            if (!isset($params["name"]) || !isset($params["image"])){
+                return new Response(null, 400, ["Content-Type" => "application/json"]);
+            }
 
             $country->setName($params["name"]);
             $country->setImage($params["image"]);
-            $country->setContinent($continent);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
