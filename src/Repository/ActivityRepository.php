@@ -36,6 +36,7 @@ class ActivityRepository extends ServiceEntityRepository
     }
     */
 
+
     /*
     public function findOneBySomeField($value): ?Activity
     {

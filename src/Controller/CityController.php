@@ -32,6 +32,25 @@ class CityController extends AbstractController
     }
 
     /**
+     * @Route("/months/{id}", name="city_months", methods="GET")
+     * @param CityRepository $cityRepository
+     * @param AppEncoder $encoder
+     * @return Response
+     */
+    public function citiesMonths($id, CityRepository $cityRepository, AppEncoder $encoder)
+    {
+        // Verify type of parameters
+        if (!is_numeric($id)) {
+            return new Response(null, 400, ["Content-Type" => "application/json"]);
+        }
+
+        $response = $cityRepository->findCitiesByMonthes($id);
+        $jsonContent = $encoder->encoder($response);
+
+        return new Response($jsonContent, 200, ["Content-Type" => "application/json"]);
+    }
+
+    /**
      * @Route("/new", name="city_new", methods={"GET","POST"})
      * @param Request $request
      * @param AppEncoder $encoder
