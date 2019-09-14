@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { CityListComponent } from './city-list/city-list.component';
 import { HomeComponent } from './home/home.component';
+import { ResultComponent } from './result/result.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { HomeComponent } from './home/home.component';
     NavbarComponent,
     CityListComponent,
     HomeComponent,
+    ResultComponent,
   ],
   imports: [
     BrowserModule,

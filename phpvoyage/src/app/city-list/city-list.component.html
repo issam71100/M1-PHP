@@ -1,5 +1,5 @@
-<div class="row">
-<div *ngFor="let city of cities" class="card" style="width: 18rem;">
+<div *ngFor="let city of cities" class="d-flex flex-row justify-content-center m-5">
+<div  class="card col-8">
         <div class="card-body">
           <h5 class="card-title">{{city.name}}</h5>
               <strong>Activités</strong>
@@ -10,7 +10,8 @@
               <hr>
               <strong>Hôtels</strong>
               <p *ngFor="let hosting of city.hostings" class="card-text">{{hosting.name}}</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+              <hr>
+          <a href="#" class="btn btn-primary">Détails</a>
         </div>
       </div>
       </div>

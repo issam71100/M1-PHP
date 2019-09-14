@@ -1,10 +1,10 @@
-<form id=formsearch>
+<form ng-submit="submit()" id=formsearch>
   <div class="d-flex flex-row justify-content-around">
     <div class="card col-3">
       <div class="card-body">
         <h5 class="card-title">Continent :</h5>
         <div *ngFor="let continent of continents" class="form-check">
-          <input class="form-check-input" type="checkbox" value="{{continent.name}}" id="checkcontinent">
+          <input class="form-check-input" type="checkbox"  name="continent" value="{{continent.name}}" id="checkcontinent">
           <label class="form-check-label" for="checkcontinent">
             {{continent.name}}
           </label>
@@ -16,7 +16,7 @@
       <div class="card-body">
         <h5 class="card-title">Pays :</h5>
         <select class="custom-select custom-select-lg mb-3">
-          <option *ngFor="let pays of lespays" value="{{pays.name}}">{{pays.name}}</option>
+          <option *ngFor="let pays of lespays" name="pays" value="{{pays.name}}">{{pays.name}}</option>
         </select>
 
       </div>
@@ -25,22 +25,22 @@
       <div class="card-body">
         <h5 class="card-title">Type d'activité :</h5>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="Sport" id="checkactivite">
+          <input class="form-check-input" type="checkbox" name="typacti" value="Sport" id="checkactivite">
           <label class="form-check-label" for="checkactivite">Sport
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="Visite" id="checkactivite">
+          <input class="form-check-input" type="checkbox" name="typacti" value="Visite" id="checkactivite">
           <label class="form-check-label" for="checkactivite">Visite
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="Detente" id="checkactivite">
+          <input class="form-check-input" type="checkbox" name="typacti" value="Detente" id="checkactivite">
           <label class="form-check-label" for="checkactivite">Détente
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="Jeux" id="checkactivite">
+          <input class="form-check-input" type="checkbox" name="typacti" value="Jeux" id="checkactivite">
           <label class="form-check-label" for="checkactivite">Jeux
           </label>
         </div>
@@ -53,7 +53,7 @@
       <div class="card-body">
           <h5 class="card-title">Prix :</h5>
     <div class="slidecontainer">
-      <input type="range" min="10" max="10000" value="5000" class="slider range" id="barreprix" name="prix" oninput="resultprix.value=parseInt(prix.value)"/>
+      <input type="range" min="0" max="10000" value="0" class="slider range" id="barreprix" name="prix" oninput="resultprix.value=parseInt(prix.value)"/>
         <output name="resultprix">--</output> €
     </div>
     <h5 class="card-title mt-4">Température :</h5>
