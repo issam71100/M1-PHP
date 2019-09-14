@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Assets\AppEncoder;
+use App\Assets\AppValidatorBase64Images;
 use App\Entity\Country;
 use App\Repository\ContinentRepository;
 use App\Repository\CountryRepository;
@@ -34,10 +35,11 @@ class CountryController extends AbstractController
      * @Route("/new", name="country_new", methods={"GET","POST"})
      * @param Request $request
      * @param AppEncoder $encoder
+     * @param AppValidatorBase64Images $validator
      * @param ContinentRepository $continentRepository
      * @return Response
      */
-    public function new(Request $request, AppEncoder $encoder, ContinentRepository $continentRepository): Response
+    public function new(Request $request, AppEncoder $encoder,AppValidatorBase64Images $validator, ContinentRepository $continentRepository): Response
     {
         $params = $request->request->all();
 
@@ -51,12 +53,26 @@ class CountryController extends AbstractController
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
+        // Uploader
+        $base_64 = $params["image"];
+        try {
+            $image = $validator->check_base64_image($base_64);
+        } catch (\Exception $e) {
+            return new Response(null, 400, ["Content-Type" => "application/json"]);
+        }
+
+        $file_content = $image["data"];
+        $uri_image = 'uploads/countries/' . $params["name"] . '.' . $image["type"];
+        $myfile = fopen($uri_image, "w") or die("Unable to open file!");
+        fwrite($myfile, $file_content);
+        fclose($myfile);
+
 
         $continent = $continentRepository->findOneByName($params["continent"]);
 
         $country = new Country();
         $country->setName($params["name"]);
-        $country->setImage($params["image"]);
+        $country->setImage($uri_image);
         $country->setContinent($continent);
 
         $entityManager = $this->getDoctrine()->getManager();

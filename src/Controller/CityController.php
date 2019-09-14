@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Assets\AppEncoder;
+use App\Assets\AppValidatorBase64Images;
 use App\Entity\City;
 use App\Repository\CityRepository;
 use App\Repository\CountryRepository;
@@ -54,10 +55,11 @@ class CityController extends AbstractController
      * @Route("/new", name="city_new", methods={"GET","POST"})
      * @param Request $request
      * @param AppEncoder $encoder
+     * @param AppValidatorBase64Images $validator
      * @param CountryRepository $countryRepository
      * @return Response
      */
-    public function new(Request $request, AppEncoder $encoder, CountryRepository $countryRepository): Response
+    public function new(Request $request, AppEncoder $encoder,AppValidatorBase64Images $validator, CountryRepository $countryRepository): Response
     {
         $params = $request->request->all();
 
@@ -71,9 +73,24 @@ class CityController extends AbstractController
             return new Response(null, 400, ["Content-Type" => "application/json"]);
         }
 
+        // Uploader
+        $base_64 = $params["image"];
+        try {
+            $image = $validator->check_base64_image($base_64);
+        } catch (\Exception $e) {
+            return new Response(null, 400, ["Content-Type" => "application/json"]);
+        }
+
+        $file_content = $image["data"];
+        $uri_image = 'uploads/cities/' . $params["name"] . '.' . $image["type"];
+        $myfile = fopen($uri_image, "w") or die("Unable to open file!");
+        fwrite($myfile, $file_content);
+        fclose($myfile);
+        // Fin Uploader
+
         $country = $countryRepository->findOneByName($params["country"]);
 
-        $city = new City($params["name"],$params["image"], $country);
+        $city = new City($params["name"],$uri_image, $country);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($city);
         $entityManager->flush();
