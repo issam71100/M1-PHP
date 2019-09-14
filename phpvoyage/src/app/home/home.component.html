@@ -1,1 +1,37 @@
-<p>home works!</p>
+<form id=formsearch>
+<div class="row">
+        <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Continent :</h5>
+                  <div *ngFor="let continent of continents"  class="form-check">
+                  <input class="form-check-input" type="checkbox" value="{{continent.name}}" id="checkcontinent">
+  <label class="form-check-label" for="checkcontinent">
+     {{continent.name}}
+  </label>
+  </div>
+                  
+                </div>
+              </div>
+              <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Pays :</h5>
+                      <div *ngFor="let pays of lepays"  class="form-check">
+                      <input class="form-check-input" type="checkbox" value="{{pays.name}}" id="checkcountry">
+      <label class="form-check-label" for="checkcountry">
+         {{pays.name}}
+      </label>
+      </div>
+                      
+                    </div>
+                  </div>
+              
+                  <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">Type d'activité :</h5>
+                          <select name="activite" form="formsearch">
+                                <option *ngFor="let activite of activites" value="{{activite.name}}">{{activite.name}}</option>
+                              </select>
+                        </div>
+                      </div>
+              </div>
+              </form>
