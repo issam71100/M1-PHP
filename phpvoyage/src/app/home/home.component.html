@@ -51,12 +51,12 @@
   <div class="d-flex flex-row justify-content-around mt-5">
     <div class="card col-5">
       <div class="card-body">
-          <h5 class="card-title">Prix :</h5>
+          <h5 class="card-title"><i class="fa fa-euro-sign mr-2"></i>Prix :</h5>
     <div class="slidecontainer">
       <input type="range" min="0" max="10000" value="0" class="slider range" id="barreprix" name="prix" oninput="resultprix.value=parseInt(prix.value)"/>
         <output name="resultprix">--</output> €
     </div>
-    <h5 class="card-title mt-4">Température :</h5>
+    <h5 class="card-title mt-4"><i class="fa fa-thermometer-half mr-2"></i> Température :</h5>
     <div class="slidecontainer">
         <input type="range" min="-55" max="55" value="0" class="slider range" id="barretemp" name="temp" oninput="resulttemp.value=parseInt(temp.value)"/>
           <output name="resulttemp">--</output> °C
@@ -65,7 +65,7 @@
   </div>
 </div>
 <div class="text-center mt-3">
-    <button type="submit" class="btn btn-success btn-lg">Rechercher</button>
+    <button type="submit" class="btn btn-success btn-lg"><i class="fa fa-search mr-2"></i> Rechercher</button>
 </div>
 </form>
 <script>
