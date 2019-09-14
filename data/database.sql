@@ -19,13 +19,29 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+INSERT INTO `continent` (`id`, `name`, `image`) VALUES ('1', 'Afrique', 'afrique.png'),
+('2', 'Europe', 'europe.png'),
+('3', 'Asie', 'asie.png'),
+('4', 'Amérique du Nord', 'amnord.png'),
+('5', 'Amérique du Sud', 'amsud.png'),
+('6', 'Océanie', 'oceanie.png');
 
-INSERT INTO `activity` (`id`, `city_id`, `duration`, `type`, `description`, `price`) VALUES ('1', '80', NULL, 'Sport', 'Ski à Cypress Mountain', '556'),
-('2', '65', NULL, 'Visite', 'Visite de la Tour Eiffel', '25'),
-('3', '74', NULL, 'Detente', 'Escape Spa Bordeaux', '79'),
-('4', '73', NULL, 'Jeux', 'Holywood Pzrk Casino', '20'),
-('5', '82', NULL, 'Visite', 'Camels trip Marrakech', '35'),
-('6', '64', NULL, 'Sport', 'Surf Lisboa ', '55');
+INSERT INTO `country` (`id`, `continent_id`, `name`, `image`) VALUES ('15', '2', 'France', 'france.png'),
+('16', '5', 'Brésil', 'bresil.png'),
+('17', '6', 'Australie', 'australie.png'),
+('18', '6', 'Nouvelle-Zélande', 'nzelande.png'),
+('19', '1', 'Maroc', 'maroc.png'),
+('20', '3', 'Dubaï', 'dubai.png'),
+('21', '1', 'Sénégal', 'senegal.png'),
+('22', '2', 'Portugal', 'portugal.png'),
+('23', '4', 'Canada', 'canada.png'),
+('24', '4', 'États-Unis', 'usa.png'),
+('25', '5', 'Colombie', 'colombie.png'),
+('26', '2', 'Italie', 'italie.png'),
+('27', '3', 'Russie', 'russia.png'),
+('28', '3', 'Japon', 'japon.png'),
+('29', '1', 'Algérie', 'algerie.png');
+
 
 INSERT INTO `city` (`id`, `contry_id`, `name`, `image`) VALUES ('64', '22', 'Lisbonne', 'lisbonne.png'),
 ('65', '15', 'Paris', 'paris.png'),
@@ -49,28 +65,14 @@ INSERT INTO `city` (`id`, `contry_id`, `name`, `image`) VALUES ('64', '22', 'Lis
 ('83', '15', 'Marseille', 'marseille.png'),
 ('84', '18', 'Wellington', 'wellington.png');
 
-INSERT INTO `continent` (`id`, `name`, `image`) VALUES ('1', 'Afrique', 'afrique.png'),
-('2', 'Europe', 'europe.png'),
-('3', 'Asie', 'asie.png'),
-('4', 'Amérique du Nord', 'amnord.png'),
-('5', 'Amérique du Sud', 'amsud.png'),
-('6', 'Océanie', 'oceanie.png');
+INSERT INTO `activity` (`id`, `city_id`, `duration`, `type`, `description`, `price`) VALUES ('1', '80', NULL, 'Sport', 'Ski à Cypress Mountain', '556'),
+('2', '65', NULL, 'Visite', 'Visite de la Tour Eiffel', '25'),
+('3', '74', NULL, 'Detente', 'Escape Spa Bordeaux', '79'),
+('4', '73', NULL, 'Jeux', 'Holywood Pzrk Casino', '20'),
+('5', '82', NULL, 'Visite', 'Camels trip Marrakech', '35'),
+('6', '64', NULL, 'Sport', 'Surf Lisboa ', '55');
 
-INSERT INTO `country` (`id`, `continent_id`, `name`, `image`) VALUES ('15', '2', 'France', 'france.png'),
-('16', '5', 'Brésil', 'bresil.png'),
-('17', '6', 'Australie', 'australie.png'),
-('18', '6', 'Nouvelle-Zélande', 'nzelande.png'),
-('19', '1', 'Maroc', 'maroc.png'),
-('20', '3', 'Dubaï', 'dubai.png'),
-('21', '1', 'Sénégal', 'senegal.png'),
-('22', '2', 'Portugal', 'portugal.png'),
-('23', '4', 'Canada', 'canada.png'),
-('24', '4', 'États-Unis', 'usa.png'),
-('25', '5', 'Colombie', 'colombie.png'),
-('26', '2', 'Italie', 'italie.png'),
-('27', '3', 'Russie', 'russia.png'),
-('28', '3', 'Japon', 'japon.png'),
-('29', '1', 'Algérie', 'algerie.png');
+
 
 INSERT INTO `hosting` (`id`, `city_id`, `name`, `address`, `price_per_night`, `type`) VALUES ('1', '66', 'VILA VITA Parc', 'Rua Anneliese Pohl, Alporchinhos · 8400-450 Porches · Portugal', '830', 'All inclusive'),
 ('2', '71', 'Burj Al Arab Jumeirah', 'Level 5, Building 5\nDubai Design District\nPO Box 73137\nDubai, UAE', '7800', 'All inclusive'),
