@@ -88,7 +88,7 @@ class CityController extends AbstractController
         fclose($myfile);
         // Fin Uploader
 
-        $country = $countryRepository->findOneByName($params["country"]);
+        $country = $countryRepository->find(intval($params["country"]));
 
         $city = new City($params["name"],$uri_image, $country);
         $entityManager = $this->getDoctrine()->getManager();

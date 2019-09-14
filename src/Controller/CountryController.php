@@ -68,7 +68,7 @@ class CountryController extends AbstractController
         fclose($myfile);
 
 
-        $continent = $continentRepository->findOneByName($params["continent"]);
+        $continent = $continentRepository->find(intval($params["continent"]));
 
         $country = new Country();
         $country->setName($params["name"]);
