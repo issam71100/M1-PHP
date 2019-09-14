@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
 
 @Component({
