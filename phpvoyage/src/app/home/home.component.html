@@ -1,4 +1,79 @@
-<form ng-submit="submit()" id=formsearch>
+<form [formGroup]="searchForm" (ngSubmit)="onSubmit(searchForm.value)">
+  <div class="d-flex flex-row justify-content-around">
+    <div class="card col-3">
+      <div class="card-body">
+        <h5 class="card-title">Continents :</h5>
+        <select class="custom-select custom-select-lg mb-3" formControlName="continent">
+          <option *ngFor="let continent of continents"  id="continent"
+            value="{{continent.name}}">{{continent.name}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="card col-3">
+      <div class="card-body">
+        <h5 class="card-title">Pays :</h5>
+        <select class="custom-select custom-select-lg mb-3" formControlName="pays">
+          <option *ngFor="let pays of lespays"  id="pays" value="{{pays.name}}">{{pays.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="card col-3">
+      <div class="card-body">
+        <h5 class="card-title">Type d'activité :</h5>
+        <select class="custom-select custom-select-lg mb-3" formControlName="typacti">
+          <option id="sport" value="Sport"><i class="fa fa-running"></i> Sport</option>
+          <option id="visite" value="Visite"><i class="fa fa-archway"></i> Visite</option>
+          <option id="detente" value="Detente"><i class="fa fa-umbrella-beach"></i> Détente</option>
+          <option id="jeux" value="Jeux"><i class="fa fa-dice"></i> Jeux</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex flex-row justify-content-around mt-5">
+    <div class="card col-5">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fa fa-euro-sign mr-2"></i>Prix :</h5>
+        <div class="slidecontainer">
+          <input type="range" min="0" max="10000" value="0" class="slider range" id="barreprix" formControlName="prix"
+            name="prix" oninput="resultprix.value=parseInt(prix.value)" />
+          <output name="resultprix">--</output> €
+        </div>
+        <h5 class="card-title mt-4"><i class="fa fa-thermometer-half mr-2"></i> Température :</h5>
+        <div class="slidecontainer">
+          <input type="range" min="-55" max="55" value="0" class="slider range" id="barretemp"
+            formControlName="temperature" name="temperature" oninput="resulttemp.value=parseInt(temperature.value)" />
+          <output name="resulttemp">--</output> °C
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-3">
+    <button type="submit" class="btn btn-success btn-lg"><i class="fa fa-search mr-2"></i> Rechercher</button>
+  </div>
+</form>
+<div class="container mt-5">
+
+
+</div>
+
+<script>
+  $(function () {
+    $('.range').next().text('--'); // Valeur par défaut
+    $('.range').on('input', function () {
+      var $set = $(this).val();
+      $(this).next().text($set);
+    });
+  });</script>
+
+
+
+
+
+
+
+
+<!-- <form (ngSubmit)="onSubmit(event)" id=formsearch>
   <div class="d-flex flex-row justify-content-around">
     <div class="card col-3">
       <div class="card-body">
@@ -75,4 +150,4 @@
         var $set = $(this).val();
         $(this).next().text($set);
       });
-    });</script>
+    });</script> -->
