@@ -42,7 +42,6 @@ INSERT INTO `country` (`id`, `continent_id`, `name`, `image`) VALUES ('15', '2',
 ('28', '3', 'Japon', 'japon.png'),
 ('29', '1', 'Algérie', 'algerie.png');
 
-
 INSERT INTO `city` (`id`, `contry_id`, `name`, `image`) VALUES ('64', '22', 'Lisbonne', 'lisbonne.png'),
 ('65', '15', 'Paris', 'paris.png'),
 ('66', '22', 'Faro', 'faro.png'),
@@ -71,8 +70,6 @@ INSERT INTO `activity` (`id`, `city_id`, `duration`, `type`, `description`, `pri
 ('4', '73', NULL, 'Jeux', 'Holywood Pzrk Casino', '20'),
 ('5', '82', NULL, 'Visite', 'Camels trip Marrakech', '35'),
 ('6', '64', NULL, 'Sport', 'Surf Lisboa ', '55');
-
-
 
 INSERT INTO `hosting` (`id`, `city_id`, `name`, `address`, `price_per_night`, `type`) VALUES ('1', '66', 'VILA VITA Parc', 'Rua Anneliese Pohl, Alporchinhos · 8400-450 Porches · Portugal', '830', 'All inclusive'),
 ('2', '71', 'Burj Al Arab Jumeirah', 'Level 5, Building 5\nDubai Design District\nPO Box 73137\nDubai, UAE', '7800', 'All inclusive'),

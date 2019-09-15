@@ -9,6 +9,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { CityListComponent } from './city-list/city-list.component';
 import { HomeComponent } from './home/home.component';
 import { ResultComponent } from './result/result.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -23,8 +24,9 @@ import { ResultComponent } from './result/result.component';
     HttpClientModule,
     AppRoutingModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent },
-    ])
+      {path: '', component: HomeComponent},
+    ]),
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
