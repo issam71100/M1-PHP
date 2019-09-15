@@ -25,22 +25,22 @@
       <div class="card-body">
         <h5 class="card-title">Type d'activité :</h5>
         <div class="form-check m-2">
-          <input class="form-check-input" type="checkbox" formControlName="typacti" value="Sport" id="checkactivite">
+          <input class="form-check-input" type="checkbox" formControlName="typacti" name="typacti" value="Sport" id="checkactivite">
           <label class="form-check-label" for="checkactivite"><i class="fa fa-running"></i> Sport
           </label>
         </div>
         <div class="form-check m-2">
-          <input class="form-check-input" type="checkbox" formControlName="typacti" value="Visite" id="checkactivite">
+          <input class="form-check-input" type="checkbox" formControlName="typacti" name="typacti" value="Visite" id="checkactivite">
           <label class="form-check-label" for="checkactivite"><i class="fa fa-archway"></i> Visite
           </label>
         </div>
         <div class="form-check m-2">
-          <input class="form-check-input" type="checkbox" formControlName="typacti" value="Detente" id="checkactivite">
+          <input class="form-check-input" type="checkbox" formControlName="typacti" name="typacti" value="Detente" id="checkactivite">
           <label class="form-check-label" for="checkactivite"><i class="fa fa-umbrella-beach"></i> Détente
           </label>
         </div>
         <div class="form-check m-2">
-          <input class="form-check-input" type="checkbox" formControlName="typacti" value="Jeux" id="checkactivite">
+          <input class="form-check-input" type="checkbox" formControlName="typacti" name="typacti" value="Jeux" id="checkactivite">
           <label class="form-check-label" for="checkactivite"><i class="fa fa-dice"></i> Jeux
           </label>
         </div>
@@ -53,12 +53,12 @@
       <div class="card-body">
           <h5 class="card-title"><i class="fa fa-euro-sign mr-2"></i>Prix :</h5>
     <div class="slidecontainer">
-      <input type="range" min="0" max="10000" value="0" class="slider range" id="barreprix" name="barreprix" oninput="resultprix.value=parseInt(prix.value)"/>
+      <input type="range" min="0" max="10000" value="0" class="slider range" id="barreprix" name="prix" oninput="resultprix.value=parseInt(prix.value)"/>
         <output name="resultprix" formControlName="resultprix">--</output> €
     </div>
     <h5 class="card-title mt-4"><i class="fa fa-thermometer-half mr-2"></i> Température :</h5>
     <div class="slidecontainer">
-        <input type="range" min="-55" max="55" value="0" class="slider range" id="barretemp" name="barretemp" oninput="resulttemp.value=parseInt(temp.value)"/>
+        <input type="range" min="-55" max="55" value="0" class="slider range" id="barretemp" name="temp" oninput="resulttemp.value=parseInt(temp.value)"/>
           <output name="resulttemp" formControlName="resulttemp">--</output> °C
       </div>
   </div>

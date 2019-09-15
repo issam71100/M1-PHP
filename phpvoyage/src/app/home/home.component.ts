@@ -48,17 +48,37 @@ export class HomeComponent implements OnInit {
       resultprix: ['', Validators.required],
       typacti: ['', Validators.required]
     });
+    console.log("url init " + this.router.url);
   }
 
   onSubmit(event){
     //console.log(event);
     const continent = this.tripForm.get('continent').value;
     const pays = this.tripForm.get('pays').value;
-    const barretemp = this.tripForm.get('resulttemp').value;
-    const barreprix = this.tripForm.get('resultprix').value;
+    const temp = this.tripForm.get('resulttemp').value;
+    const prix = this.tripForm.get('resultprix').value;
     const typacti = this.tripForm.get('typacti').value;
+    console.log("url submit " + this.router.url);
 
-    this.router.navigate(['/cities']);
+    console.log("continent "+continent); // ne s'affiche pas
+    console.log("pays "+pays); // fonctionne
+    console.log("temperature" +temp); // ne s'affiche pas
+    console.log("prix "+prix); // ne s'affiche pas
+    console.log("type acti "+typacti); // affiche true
+
+    //this.router.navigate(['/cities']);
+    /**
+     * SELECT * FROM City ci, Activity a, Country cou, Continent Con, Month m
+     * WHERE Ci.country_id = cou.id
+     * AND cou.continent_id = con.id
+     * AND a.city_id = ci.id
+     * AND m.activity_id = a.id
+     * AND con.name = continent
+     * AND cou.name = pays
+     * AND m.temperature = temp
+     * AND a.price = prix
+     * AND a.type = typacti;
+     */
   }
 
 }
