@@ -24,34 +24,6 @@ class CityRepository extends ServiceEntityRepository
     // /**
     //  * @return City[] Returns an array of City objects
     //  */
-    public function findByExampleField($id)
-    {
-        // Management of Months
-        $years_months= [
-            1=>"janvier",
-            2=>"fevrier",
-            3=>"mars",
-            4=>"avril",
-            5=>"mai",
-            6=>"juin",
-            7=>"juillet",
-            8=>"aout",
-            9=>"septembre",
-            10=>"octobre",
-            11=>"novembre",
-            12=>"decembre",
-        ];
-
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.trips = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
     public function findCitiesByMonthes($id)
     {
         // Management of Months
@@ -76,6 +48,20 @@ class CityRepository extends ServiceEntityRepository
             ->leftJoin('a.months','m')
             ->andWhere('m.name = :name')
             ->setParameter('name', $years_months[$id])
+            ->getQuery()
+            ->getResult();
+    }
+
+    // /**
+    //  * @return City[] Returns an array of City objects
+    //  */
+    public function findCitiesByActivity($activity_name)
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c')
+            ->leftJoin('c.activities', 'a')
+            ->andWhere('c.name = :name')
+            ->setParameter('name', $activity_name)
             ->getQuery()
             ->getResult();
     }

@@ -52,6 +52,22 @@ class CityController extends AbstractController
     }
 
     /**
+     * @Route("/activity/{name}", name="city_activity", methods="GET")
+     * @param $name
+     * @param CityRepository $cityRepository
+     * @param AppEncoder $encoder
+     * @return Response
+     */
+    public function citiesActivity($name, CityRepository $cityRepository, AppEncoder $encoder)
+    {
+
+        $response = $cityRepository->findCitiesByActivity($name);
+        $jsonContent = $encoder->encoder($response);
+
+        return new Response($jsonContent, 200, ["Content-Type" => "application/json"]);
+    }
+
+    /**
      * @Route("/new", name="city_new", methods={"GET","POST"})
      * @param Request $request
      * @param AppEncoder $encoder
