@@ -1,6 +1,8 @@
 Symfony & Anguar : Hitema M1 Module PHP1 Project
 ========================
 
+TEAM : Tony PEREIRA, Victor FAU, Elias HAMADOUCHE, Issam KADAR, Flavien JARRY
+
 Requirements
 ------------
 
